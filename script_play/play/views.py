@@ -1,25 +1,12 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from .forms import InputText
 
 from sklearn.externals import joblib
-# from .nlp_review import create_features
+from play.scripts.nlp_review import create_features
 from nltk.tokenize import word_tokenize
 
-
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
-
-lm = WordNetLemmatizer()
-
-def create_features(words):
-    new_words = [lm.lemmatize(word) for word in words]
-    new_words = [word for word in new_words if word not in stopwords.words('english')]
-    words_dict = dict([(word, True) for word in new_words])
-    return words_dict
-
 def predict(text):
-    model = joblib.load('play/nlpmodel.pkl')
+    model = joblib.load('play/scripts/models/nlpmodel.pkl')
     text = word_tokenize(text)
     text = create_features(text)
     return model.classify(text)
